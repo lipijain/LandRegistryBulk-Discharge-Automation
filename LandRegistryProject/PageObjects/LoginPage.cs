@@ -82,7 +82,6 @@ namespace LandRegistryProject.PageObject
             eDs1Discharge.Click();  
         }
 
-
         public string GetActualAddress()
         {
             return ActualAddress.Text;
