@@ -78,14 +78,18 @@ namespace LandRegistryProject.StepDefinitions
             loginPage.ClickeDs1Discharge();
         }
 
+        [When(@"I am on e-DS(.*) discharge page")]
+        public void WhenIAmOnE_DSDischargePage(int p0)
+        {
+            loginPage.ClickeDs1Discharge();
+        }
+
 
         [When(@"I have identified address on excel datasheet and select the title number")]
         public void WhenIHaveIdentifiedExcelDataSheetAndEnterTheTitleNumber()
         {
-            //var checkUnusedAddressData = readingFromExcelSheet.GetUnusedColAndRowAddress("Sheet1");
-            //var checkUnusedReferenceData = readingFromExcelSheet.GetUnusedColAndRowReference("Sheet1");
-            var address = readingFromExcelSheet.ReadData("Sheet1", "D1:D5"); //From excel
-            var titleNumber = readingFromExcelSheet.ReadData("Sheet1", "I1:I5"); //From excel
+            var address = readingFromExcelSheet.ReadRowData("D1:D5"); //From excel
+            var titleNumber = readingFromExcelSheet.ReadRowData("I1:I5"); //From excel
 
             loginPage.EnterTittleNumberFromExcel(titleNumber[4]);
             loginPage.ClickNextButton();
@@ -142,6 +146,7 @@ namespace LandRegistryProject.StepDefinitions
         {
             var appRef = loginPage.GetDisplayedApplicationReference();
             readingFromExcelSheet.WriteDataToExcelSpreadSheet("Sheet1", "K5", appRef);
+            readingFromExcelSheet.WriteDataToExcelSpreadSheet("Sheet1", "M5", "Submitted");
         }
 
         [Then(@"I click logout button")]
@@ -149,5 +154,19 @@ namespace LandRegistryProject.StepDefinitions
         {
             loginPage.ClickLogoutButton();
         }
+
+
+        [Then(@"I perform the end to end application submission for all the data")]
+        public void ThenIPerformTheEndToEndApplicationSubmissionForAllTheData()
+        {
+
+            // readingFromExcelSheet.navigateSheet();
+            readingFromExcelSheet.ReadExcelData();
+            
+        }
+
+        
+
+
     }
 }

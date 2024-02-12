@@ -1,83 +1,97 @@
-﻿using FluentAssertions;
-using Microsoft.Office.Interop.Excel;
+﻿using BoDi;
+using LandRegistryProject.Drivers;
+using LandRegistryProject.PageObject;
 using NUnit.Framework;
 using OfficeOpenXml;
-using SpecFlow.Internal.Json;
-using System.Reflection;
-using System.Runtime.InteropServices;
-using System.Runtime.Intrinsics.X86;
-using System.Security.Cryptography.X509Certificates;
-using Excel = Microsoft.Office.Interop.Excel;
+using OpenQA.Selenium;
+using System.Text;
 
 namespace LandRegistryProject.Support
 {
-    public class ReadingFromExcelSheet
+    public class ReadingFromExcelSheet : DriverHelper
     {
-        public void ReadExcelData()
+
+        public ExcelWorksheet worksheet;
+        public ExcelPackage pck;
+        public ExcelWorksheet sheet;
+        public LoginPage loginPage;
+        public DirectoryInfo projDir = new DirectoryInfo(Environment.CurrentDirectory);
+        public string excelFilePath;
+        
+
+        public ReadingFromExcelSheet(IObjectContainer container)
         {
-            string filePath = "C:\\Users\\odunayo.olufemi\\OneDrive - Homes England\\Documents\\DSTittleNumber\\TittleNumer.xlsx";
+            driver = container.Resolve<IWebDriver>();
+            loginPage = container.Resolve<LoginPage>();
+
+        }
+            public void ReadExcelData()
+        {
+            excelFilePath = projDir.Parent.Parent.Parent.FullName + @"\TestDatas\TittleNumer.xlsx";
+            var newFile = new FileInfo(excelFilePath);
+            pck = new OfficeOpenXml.ExcelPackage(newFile);
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
-            using (var package = new ExcelPackage(new FileInfo(filePath)))
+            sheet = pck.Workbook.Worksheets[0];
+
+            var sb = new StringBuilder();
+            int rows = sheet.Dimension.Rows;
+            int cols = sheet.Dimension.Columns;
+
+            for (int r = 1; r <= rows; r++)
             {
-                ExcelWorksheet worksheet = package.Workbook.Worksheets.First(); // Assuming you're working with the first sheet
-
-                var rowCount = worksheet.Dimension.Rows;
-                var colCount = worksheet.Dimension.Columns;
-
-
-                for (int row = 1; row <= rowCount; row++)
+                if (!sheet.Cells[r, 13].Text.Equals("Submitted"))
                 {
-                    for (int col = 1; col < colCount; col++)
-                    {
-                        Console.Write(worksheet.Cells[row, col].Value + "\t");
-                        var text = worksheet.Cells[row, col].Value;
-                    }
-                    Console.WriteLine();
+                    string rg = "A" + r + ":M" + r;
+                    List<string>  rowdata = ReadRowData(rg);
+                    Othersteps(rowdata, r);
                 }
             }
         }
 
-        public List<string> ReadData(string sheetName, string cellRange)
+        
+
+        public List<string> ReadRowData(string cellRange)
         {
-            string excelFilePath = "C:\\Users\\odunayo.olufemi\\OneDrive - Homes England\\Documents\\DSTittleNumber\\TittleNumer.xlsx";
-            //string excelFilePath = Path.Combine(Environment.CurrentDirectory, @"TestDatas\", "TittleNumber.xlsx");
-            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
-            // Load the Excel package from the file
-            FileInfo fileInfo = new FileInfo(excelFilePath);
+
+            //string excelFilePath = "C:\\Users\\odunayo.olufemi\\OneDrive - Homes England\\Documents\\DSTittleNumber\\TittleNumer.xlsx";
+            ////string excelFilePath = Path.Combine(Environment.CurrentDirectory, @"TestDatas\", "TittleNumber.xlsx");
+            //ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+            //// Load the Excel package from the file
+            //FileInfo fileInfo = new FileInfo(excelFilePath);
             List<string> cellValue = new List<string>();
-            using (ExcelPackage package = new ExcelPackage(fileInfo))
-            {
+            //using (ExcelPackage package = new ExcelPackage(fileInfo))
+            //{
                 // Access the worksheet (Sheet1 in this case)
-                ExcelWorksheet worksheet = package.Workbook.Worksheets[sheetName];
+                sheet = pck.Workbook.Worksheets[0];
 
                 // Read data from Cells
-                worksheet.Cells[cellRange].ToList().ForEach(x => cellValue.Add(x.Value.ToString()!));
-                // var cellB1Value = worksheet.Cells["I1:I5"].ToList();
-            }
+                sheet.Cells[cellRange].ToList().ForEach(x => cellValue.Add(x.Value.ToString()!));
+            //}
             return cellValue;
         }
 
+
+
         public void WriteDataToExcelSpreadSheet(string sheetName, string cellRange, string value)
         {
-            string filePath = "C:\\Users\\odunayo.olufemi\\OneDrive - Homes England\\Documents\\DSTittleNumber\\TittleNumer.xlsx";
-
+            // string filePath = "C:\\Users\\odunayo.olufemi\\OneDrive - Homes England\\Documents\\DSTittleNumber\\TittleNumer.xlsx";
+            excelFilePath = projDir.Parent.Parent.Parent.FullName + @"\TestDatas\TittleNumer.xlsx";
             var extractedAddress = value.Length > 20 ? GetSubString(value) : value;
             //var extractedAddress = value.Contains("Wallace") ? GetSubString(value) : value;
-            using (var package = new ExcelPackage(filePath))
-            {
-                //ExcelWorksheet worksheet = package.Workbook.Worksheets.Add(sheetName);
-                ExcelWorksheet worksheet = package.Workbook.Worksheets[sheetName];
 
+                //ExcelWorksheet worksheet = package.Workbook.Worksheets.Add(sheetName);
+                //worksheet = package.Workbook.Worksheets[sheetName];
+                sheet = pck.Workbook.Worksheets[0];
                 // Example data
                 //worksheet.Cells[1, 1].Value = "Address";
                 //worksheet.Cells[1, 2].Value = "Application Reference";
 
-                worksheet.Cells[cellRange].Value = extractedAddress;
+                sheet.Cells[cellRange].Value = extractedAddress;
 
                 // Save the file
-                package.SaveAs(new FileInfo(filePath));
-            }
+                pck.SaveAs(new FileInfo(excelFilePath));
         }
+
 
         public string GetSubString(string value)
         {
@@ -103,6 +117,30 @@ namespace LandRegistryProject.Support
             }
 
             return remainingPart;
+        }
+
+        public void Othersteps(List<string> rowdata, int row)
+        {
+            loginPage.EnterTittleNumberFromExcel(rowdata[3]);
+
+            loginPage.ClickNextButton();
+            var actualAddress = loginPage.GetActualAddress();
+            Assert.That(actualAddress.Contains(rowdata[1]), Is.EqualTo(true));
+            loginPage.ClickNextButton();
+            loginPage.EnterDateOfCharge();
+            loginPage.SelectYesRadioButton();
+            var YesMessagesOption = loginPage.IsYesMessagesOptionTicked();
+            Assert.That(YesMessagesOption, Is.EqualTo(YesMessagesOption));
+            loginPage.ClickNextButton();
+            loginPage.ClickNextButton();
+            loginPage.EnterCustomerReference();
+            loginPage.ClickNextButton();
+            var address = loginPage.GetDisplayedAddressDetails();
+            WriteDataToExcelSpreadSheet("Sheet1", "J" + row, address);
+            var appRef = loginPage.GetDisplayedApplicationReference();
+            WriteDataToExcelSpreadSheet("Sheet1", "K" + row, appRef);
+            WriteDataToExcelSpreadSheet("Sheet1", "M" + row, "Submitted");
+            loginPage.ClickeDs1Discharge();
         }
     }
 }
