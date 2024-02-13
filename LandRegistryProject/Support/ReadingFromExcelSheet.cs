@@ -37,9 +37,9 @@ namespace LandRegistryProject.Support
             int rows = sheet.Dimension.Rows;
             int cols = sheet.Dimension.Columns;
 
-            for (int r = 1; r <= rows; r++)
+            for (int r = 3; r <= rows; r++)
             {
-                if (!sheet.Cells[r, 13].Text.Equals("Submitted"))
+                if (sheet.Cells[r, 13].Text.Equals(""))
                 {
                     string rg = "A" + r + ":M" + r;
                     List<string>  rowdata = ReadRowData(rg);
@@ -61,7 +61,7 @@ namespace LandRegistryProject.Support
             List<string> cellValue = new List<string>();
             //using (ExcelPackage package = new ExcelPackage(fileInfo))
             //{
-                // Access the worksheet (Sheet1 in this case)
+                // Access the worksheet (Feb 2024 in this case)
                 sheet = pck.Workbook.Worksheets[0];
 
                 // Read data from Cells
@@ -136,10 +136,10 @@ namespace LandRegistryProject.Support
             loginPage.EnterCustomerReference();
             loginPage.ClickNextButton();
             var address = loginPage.GetDisplayedAddressDetails();
-            WriteDataToExcelSpreadSheet("Sheet1", "J" + row, address);
+            WriteDataToExcelSpreadSheet("Feb 2024", "J" + row, address);
             var appRef = loginPage.GetDisplayedApplicationReference();
-            WriteDataToExcelSpreadSheet("Sheet1", "K" + row, appRef);
-            WriteDataToExcelSpreadSheet("Sheet1", "M" + row, "Submitted");
+            WriteDataToExcelSpreadSheet("Feb 2024", "K" + row, appRef);
+            WriteDataToExcelSpreadSheet("Feb 2024", "M" + row, "Submitted");
             loginPage.ClickeDs1Discharge();
         }
     }

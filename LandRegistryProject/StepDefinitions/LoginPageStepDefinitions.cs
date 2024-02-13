@@ -138,15 +138,15 @@ namespace LandRegistryProject.StepDefinitions
         public void WhenICopyTheAddressToTheExcelDataSheet()
         {
             var address = loginPage.GetDisplayedAddressDetails();
-            readingFromExcelSheet.WriteDataToExcelSpreadSheet("Sheet1", "J5", address);
+            readingFromExcelSheet.WriteDataToExcelSpreadSheet("Feb 2024", "J5", address);
         }
 
         [When(@"I copy the application reference to the excel data sheet")]
         public void WhenICopyTheApplicationReferenceToTheExcelDataSheet()
         {
             var appRef = loginPage.GetDisplayedApplicationReference();
-            readingFromExcelSheet.WriteDataToExcelSpreadSheet("Sheet1", "K5", appRef);
-            readingFromExcelSheet.WriteDataToExcelSpreadSheet("Sheet1", "M5", "Submitted");
+            readingFromExcelSheet.WriteDataToExcelSpreadSheet("Feb 2024", "K5", appRef);
+            readingFromExcelSheet.WriteDataToExcelSpreadSheet("Feb 2024", "M5", "Submitted");
         }
 
         [Then(@"I click logout button")]
