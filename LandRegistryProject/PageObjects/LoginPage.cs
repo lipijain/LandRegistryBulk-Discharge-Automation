@@ -1,16 +1,22 @@
 ﻿using BoDi;
 using LandRegistryProject.Drivers;
+using LandRegistryProject.Support;
 using LandRegistryProject.Utilities;
+using NUnit.Framework;
 using OpenQA.Selenium;
+using System.ComponentModel;
 
 namespace LandRegistryProject.PageObject
 {
     public class LoginPage : DriverHelper
     {
+        public IObjectContainer _container;
         public LoginPage(IObjectContainer container)
         {
             driver = container.Resolve<IWebDriver>();
+            _container = container; 
         }
+
 
         public void GoToLandRegistryPage() => driver.Navigate().GoToUrl(Config.url);
         IWebElement Usermane => driver.FindElement(By.Id("username"));
@@ -137,5 +143,6 @@ namespace LandRegistryProject.PageObject
             LogoutButton.Click();
         }
 
+       
     }
 }
