@@ -117,6 +117,9 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="BorrowBox_DS1File_Path_Location" xml:space="preserve">
+    <value>https://homesandcommunities.sharepoint.com/:x:/r/sites/HelptoBuy_TM45/_layouts/15/Doc.aspx?sourcedoc=%7B94A7CCD5-D9E3-421E-AC08-67D4DEBE4A93%7D&amp;file=Borrow%20Box%20DS1%20Daily%20Tracker%20FEBRUARY%202024.xlsx&amp;wdOrigin=TEAMS-MAGLEV.p2p_ns.rwc&amp;action=default&amp;mobileredirect=true</value>
+  </data>
   <data name="Customer_Reference" xml:space="preserve">
     <value>0</value>
   </data>
