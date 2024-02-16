@@ -1,6 +1,7 @@
 ﻿using BoDi;
 using LandRegistryProject.Drivers;
 using LandRegistryProject.PageObject;
+using Microsoft.Office.Interop.Excel;
 using NUnit.Framework;
 using OfficeOpenXml;
 using OpenQA.Selenium;
@@ -17,6 +18,7 @@ namespace LandRegistryProject.Support
         public LoginPage loginPage;
         public DirectoryInfo projDir = new DirectoryInfo(Environment.CurrentDirectory);
         public string excelFilePath;
+        
         
 
         public ReadingFromExcelSheet(IObjectContainer container)
@@ -39,16 +41,35 @@ namespace LandRegistryProject.Support
 
             for (int r = 3; r <= rows; r++)
             {
+                
                 if (sheet.Cells[r, 13].Text.Equals(""))
                 {
                     string rg = "A" + r + ":M" + r;
-                    List<string>  rowdata = ReadRowData(rg);
-                    Othersteps(rowdata, r);
+                   // List<string> rowdata = ReadRowData(rg);
+                    Dictionary<string, string> RData = ReadRowData(r);
+                    Othersteps(RData, r);
                 }
             }
         }
 
+
+
+        public Dictionary<string, string> ReadRowData(int row)
+        {
+            Dictionary<string, string> RowData = new Dictionary<string, string>();
+
+            List<string> cellValue = new List<string>();
+            string cellRange = "A" + row + ":M" + row;
+
+            sheet = pck.Workbook.Worksheets[0];
+
+
+            for (int i = 1; i <= 13; i++)
+                RowData.Add(sheet.Cells[3, i].Text.ToString(), sheet.Cells[row, i].Text.ToString());
         
+            return RowData;
+            
+        }
 
         public List<string> ReadRowData(string cellRange)
         {
@@ -61,22 +82,34 @@ namespace LandRegistryProject.Support
             List<string> cellValue = new List<string>();
             //using (ExcelPackage package = new ExcelPackage(fileInfo))
             //{
-                // Access the worksheet (Feb 2024 in this case)
-                sheet = pck.Workbook.Worksheets[0];
+            // Access the worksheet (Feb 2024 in this case)
+            sheet = pck.Workbook.Worksheets[0];
 
-                // Read data from Cells
-                sheet.Cells[cellRange].ToList().ForEach(x => cellValue.Add(x.Value.ToString()!));
+            // Read data from Cells
+            sheet.Cells[cellRange].ToList().ForEach(x => cellValue.Add(x.Value.ToString()!));
             //}
             return cellValue;
         }
 
 
 
-        public void WriteDataToExcelSpreadSheet(string sheetName, string cellRange, string value)
+        public int GetColumnByName(string colName)
+        {
+            int i = 1;
+            for (i = 1; i <= 13; i++)
+            {
+                if (sheet.Cells[3, i].Text.Equals(colName))
+                    break;
+            }
+            return i;
+        }
+
+
+        public void WriteDataToExcelSpreadSheet(int row, int col, string value)
         {
             // string filePath = "C:\\Users\\odunayo.olufemi\\OneDrive - Homes England\\Documents\\DSTittleNumber\\TittleNumer.xlsx";
             excelFilePath = projDir.Parent.Parent.Parent.FullName + @"\TestDatas\TittleNumer.xlsx";
-            var extractedAddress = value.Length > 20 ? GetSubString(value) : value;
+            var ValueToUpdate = value.Length > 20 ? GetSubString(value) : value;
             //var extractedAddress = value.Contains("Wallace") ? GetSubString(value) : value;
 
                 //ExcelWorksheet worksheet = package.Workbook.Worksheets.Add(sheetName);
@@ -86,7 +119,7 @@ namespace LandRegistryProject.Support
                 //worksheet.Cells[1, 1].Value = "Address";
                 //worksheet.Cells[1, 2].Value = "Application Reference";
 
-                sheet.Cells[cellRange].Value = extractedAddress;
+                sheet.Cells[row, col].Value = ValueToUpdate;
 
                 // Save the file
                 pck.SaveAs(new FileInfo(excelFilePath));
@@ -119,28 +152,37 @@ namespace LandRegistryProject.Support
             return remainingPart;
         }
 
-        public void Othersteps(List<string> rowdata, int row)
+        public void Othersteps(Dictionary<string, string> rowdata, int row)
         {
-            loginPage.EnterTittleNumberFromExcel(rowdata[3]);
+            if (!rowdata.GetValueOrDefault("HMLR Title No.").Equals("") && !rowdata.GetValueOrDefault("Full Asset Address").Equals(""))
+            {
+                Assert.That(!rowdata.GetValueOrDefault("HMLR Title No.").Equals(""), "\n\nERROR: No value in Field 'HMLR Title No'\n\n");
 
-            loginPage.ClickNextButton();
-            var actualAddress = loginPage.GetActualAddress();
-            Assert.That(actualAddress.Contains(rowdata[1]), Is.EqualTo(true));
-            loginPage.ClickNextButton();
-            loginPage.EnterDateOfCharge();
-            loginPage.SelectYesRadioButton();
-            var YesMessagesOption = loginPage.IsYesMessagesOptionTicked();
-            Assert.That(YesMessagesOption, Is.EqualTo(YesMessagesOption));
-            loginPage.ClickNextButton();
-            loginPage.ClickNextButton();
-            loginPage.EnterCustomerReference();
-            loginPage.ClickNextButton();
-            var address = loginPage.GetDisplayedAddressDetails();
-            WriteDataToExcelSpreadSheet("Feb 2024", "J" + row, address);
-            var appRef = loginPage.GetDisplayedApplicationReference();
-            WriteDataToExcelSpreadSheet("Feb 2024", "K" + row, appRef);
-            WriteDataToExcelSpreadSheet("Feb 2024", "M" + row, "Submitted");
-            loginPage.ClickeDs1Discharge();
+                loginPage.EnterTittleNumberFromExcel(rowdata.GetValueOrDefault("HMLR Title No."));
+
+                loginPage.ClickNextButton();
+                var actualAddress = loginPage.GetActualAddress();
+
+                Assert.That(actualAddress.Contains(rowdata.GetValueOrDefault("Full Asset Address")), Is.EqualTo(true));
+                Assert.That(!rowdata.GetValueOrDefault("Full Asset Address").Equals(""), "\n\nERROR: No value in Field 'Full Asset Address'\n\n");
+                loginPage.ClickNextButton();
+                loginPage.EnterDateOfCharge();
+                loginPage.SelectYesRadioButton();
+                var YesMessagesOption = loginPage.IsYesMessagesOptionTicked();
+                Assert.That(YesMessagesOption, Is.EqualTo(YesMessagesOption));
+                loginPage.ClickNextButton();
+                loginPage.ClickNextButton();
+                loginPage.EnterCustomerReference();
+                loginPage.ClickNextButton();
+                var address = loginPage.GetDisplayedAddressDetails();
+                WriteDataToExcelSpreadSheet(row, GetColumnByName("HMLR Asset Address"), address);
+                var appRef = loginPage.GetDisplayedApplicationReference();
+                WriteDataToExcelSpreadSheet(row, GetColumnByName("Discharge Reference"), appRef);
+                WriteDataToExcelSpreadSheet(row, GetColumnByName("eDS1 Status"), "Submitted");
+                loginPage.ClickeDs1Discharge();
+            }
+            else
+                Console.WriteLine("\n\nRECORD SKIPPED for row: "+ row + "\nNo value in Field 'HMLR Title No' or 'Full Asset Address'.\n\n");
         }
     }
 }
