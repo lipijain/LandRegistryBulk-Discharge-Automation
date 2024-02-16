@@ -1,13 +1,9 @@
 using BoDi;
-using Gherkin.Ast;
 using LandRegistryProject.Drivers;
 using LandRegistryProject.PageObject;
 using LandRegistryProject.Support;
 using NUnit.Framework;
 using OpenQA.Selenium;
-using System;
-using System.Linq;
-using TechTalk.SpecFlow;
 
 namespace LandRegistryProject.StepDefinitions
 {
@@ -23,6 +19,8 @@ namespace LandRegistryProject.StepDefinitions
             loginPage = container.Resolve<LoginPage>();
             readingFromExcelSheet = container.Resolve<ReadingFromExcelSheet>();
         }
+        //Stage1
+
         [Given(@"I am on land registry sign-in page")]
         public void GivenIAmOnLandRegistrySign_InPage()
         {
@@ -69,7 +67,7 @@ namespace LandRegistryProject.StepDefinitions
             loginPage.ClickLenderServices();
         }
 
-      // Scenario2
+      // Stage2
 
         [Given(@"I am on e-DS(.*) discharge page")]
         public void GivenIAmOnE_DSDischargePage(int p0)
@@ -134,19 +132,21 @@ namespace LandRegistryProject.StepDefinitions
             loginPage.ClickNextButton();
         }
 
+        // Stage3
+
         [When(@"I copy the address to the excel data sheet")]
         public void WhenICopyTheAddressToTheExcelDataSheet()
         {
+            //readingFromExcelSheet.WriteDataToExcelSpreadSheet
             var address = loginPage.GetDisplayedAddressDetails();
-            //readingFromExcelSheet.WriteDataToExcelSpreadSheet("J5", address);
         }
 
         [When(@"I copy the application reference to the excel data sheet")]
         public void WhenICopyTheApplicationReferenceToTheExcelDataSheet()
         {
+            // readingFromExcelSheet.WriteDataToExcelSpreadSheet
             var appRef = loginPage.GetDisplayedApplicationReference();
-            //readingFromExcelSheet.WriteDataToExcelSpreadSheet("K5", appRef);
-           // readingFromExcelSheet.WriteDataToExcelSpreadSheet("M5", "Submitted");
+          
         }
 
         [Then(@"I click logout button")]
@@ -155,18 +155,11 @@ namespace LandRegistryProject.StepDefinitions
             loginPage.ClickLogoutButton();
         }
 
-
         [Then(@"I perform the end to end application submission for all the data")]
         public void ThenIPerformTheEndToEndApplicationSubmissionForAllTheData()
         {
-
             // readingFromExcelSheet.navigateSheet();
             readingFromExcelSheet.ReadExcelData();
-            
         }
-
-        
-
-
     }
 }

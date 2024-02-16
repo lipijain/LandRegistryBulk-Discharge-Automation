@@ -1,7 +1,6 @@
 ﻿using BoDi;
 using LandRegistryProject.Drivers;
 using LandRegistryProject.PageObject;
-using Microsoft.Office.Interop.Excel;
 using NUnit.Framework;
 using OfficeOpenXml;
 using OpenQA.Selenium;
@@ -11,14 +10,12 @@ namespace LandRegistryProject.Support
 {
     public class ReadingFromExcelSheet : DriverHelper
     {
-
         public ExcelWorksheet worksheet;
         public ExcelPackage pck;
         public ExcelWorksheet sheet;
         public LoginPage loginPage;
         public DirectoryInfo projDir = new DirectoryInfo(Environment.CurrentDirectory);
         public string excelFilePath;
-        
         
 
         public ReadingFromExcelSheet(IObjectContainer container)
@@ -27,9 +24,12 @@ namespace LandRegistryProject.Support
             loginPage = container.Resolve<LoginPage>();
 
         }
-            public void ReadExcelData()
+        public void ReadExcelData()
         {
+            //File Path To BorrowBox_DS1File Path Location
             excelFilePath = projDir.Parent.Parent.Parent.FullName + @"\TestDatas\TittleNumer.xlsx";
+            //excelFilePath = (Config.BorrowBox_DS1File_Path_Location);
+            
             var newFile = new FileInfo(excelFilePath);
             pck = new OfficeOpenXml.ExcelPackage(newFile);
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
@@ -41,18 +41,15 @@ namespace LandRegistryProject.Support
 
             for (int r = 3; r <= rows; r++)
             {
-                
                 if (sheet.Cells[r, 13].Text.Equals(""))
                 {
                     string rg = "A" + r + ":M" + r;
-                   // List<string> rowdata = ReadRowData(rg);
+                    // List<string> rowdata = ReadRowData(rg);
                     Dictionary<string, string> RData = ReadRowData(r);
                     Othersteps(RData, r);
                 }
             }
         }
-
-
 
         public Dictionary<string, string> ReadRowData(int row)
         {
@@ -63,31 +60,23 @@ namespace LandRegistryProject.Support
 
             sheet = pck.Workbook.Worksheets[0];
 
-
             for (int i = 1; i <= 13; i++)
                 RowData.Add(sheet.Cells[3, i].Text.ToString(), sheet.Cells[row, i].Text.ToString());
         
             return RowData;
-            
         }
 
         public List<string> ReadRowData(string cellRange)
         {
-
-            //string excelFilePath = "C:\\Users\\odunayo.olufemi\\OneDrive - Homes England\\Documents\\DSTittleNumber\\TittleNumer.xlsx";
-            ////string excelFilePath = Path.Combine(Environment.CurrentDirectory, @"TestDatas\", "TittleNumber.xlsx");
-            //ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
-            //// Load the Excel package from the file
-            //FileInfo fileInfo = new FileInfo(excelFilePath);
+            // String to access the worksheet
             List<string> cellValue = new List<string>();
-            //using (ExcelPackage package = new ExcelPackage(fileInfo))
-            //{
+            
             // Access the worksheet (Feb 2024 in this case)
             sheet = pck.Workbook.Worksheets[0];
 
             // Read data from Cells
             sheet.Cells[cellRange].ToList().ForEach(x => cellValue.Add(x.Value.ToString()!));
-            //}
+
             return cellValue;
         }
 
@@ -107,18 +96,12 @@ namespace LandRegistryProject.Support
 
         public void WriteDataToExcelSpreadSheet(int row, int col, string value)
         {
-            // string filePath = "C:\\Users\\odunayo.olufemi\\OneDrive - Homes England\\Documents\\DSTittleNumber\\TittleNumer.xlsx";
+            //File Path To BorrowBox_DS1File Path Location
             excelFilePath = projDir.Parent.Parent.Parent.FullName + @"\TestDatas\TittleNumer.xlsx";
-            var ValueToUpdate = value.Length > 20 ? GetSubString(value) : value;
-            //var extractedAddress = value.Contains("Wallace") ? GetSubString(value) : value;
+            //excelFilePath = (Config.BorrowBox_DS1File_Path_Location);
 
-                //ExcelWorksheet worksheet = package.Workbook.Worksheets.Add(sheetName);
-                //worksheet = package.Workbook.Worksheets[sheetName];
+               var ValueToUpdate = value.Length > 20 ? GetSubString(value) : value;
                 sheet = pck.Workbook.Worksheets[0];
-                // Example data
-                //worksheet.Cells[1, 1].Value = "Address";
-                //worksheet.Cells[1, 2].Value = "Application Reference";
-
                 sheet.Cells[row, col].Value = ValueToUpdate;
 
                 // Save the file
@@ -163,7 +146,7 @@ namespace LandRegistryProject.Support
                 loginPage.ClickNextButton();
                 var actualAddress = loginPage.GetActualAddress();
 
-                Assert.That(actualAddress.Contains(rowdata.GetValueOrDefault("Full Asset Address")), Is.EqualTo(true));
+                Assert.That(actualAddress.Replace("(", "").Replace(")", "").Contains(rowdata.GetValueOrDefault("Full Asset Address").Replace("(", "").Replace(")", "")), Is.EqualTo(true));
                 Assert.That(!rowdata.GetValueOrDefault("Full Asset Address").Equals(""), "\n\nERROR: No value in Field 'Full Asset Address'\n\n");
                 loginPage.ClickNextButton();
                 loginPage.EnterDateOfCharge();
@@ -186,4 +169,3 @@ namespace LandRegistryProject.Support
         }
     }
 }
-

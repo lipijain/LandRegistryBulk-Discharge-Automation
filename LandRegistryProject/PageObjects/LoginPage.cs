@@ -142,7 +142,5 @@ namespace LandRegistryProject.PageObject
         {
             LogoutButton.Click();
         }
-
-       
     }
 }

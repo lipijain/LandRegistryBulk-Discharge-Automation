@@ -61,6 +61,15 @@ namespace LandRegistryProject {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to https://homesandcommunities.sharepoint.com/:x:/r/sites/HelptoBuy_TM45/_layouts/15/Doc.aspx?sourcedoc=%7B94A7CCD5-D9E3-421E-AC08-67D4DEBE4A93%7D&amp;file=Borrow%20Box%20DS1%20Daily%20Tracker%20FEBRUARY%202024.xlsx&amp;wdOrigin=TEAMS-MAGLEV.p2p_ns.rwc&amp;action=default&amp;mobileredirect=true.
+        /// </summary>
+        internal static string BorrowBox_DS1File_Path_Location {
+            get {
+                return ResourceManager.GetString("BorrowBox_DS1File_Path_Location", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 0.
         /// </summary>
         internal static string Customer_Reference {
