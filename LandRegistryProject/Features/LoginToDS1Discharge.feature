@@ -33,3 +33,17 @@ Scenario: Login to discharge page
  And I copy the address to the excel data sheet
  And I copy the application reference to the excel data sheet
  Then I click logout button
+
+
+ Scenario: E2E for application submission 
+  Given I am on land registry sign-in page
+  When I enter Username in the user name field
+  And I enter Password in the password field
+  Then I click the login button
+  And data successfully sumitted
+  And I click request official copies go to service button
+  Then I click lender services
+  When I am on e-DS1 discharge page
+  Then I perform the end to end application submission for all the data
+  Then I click logout button
+   
