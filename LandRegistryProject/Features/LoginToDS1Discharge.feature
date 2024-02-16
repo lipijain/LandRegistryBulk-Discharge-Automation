@@ -50,4 +50,3 @@ Background: Navigate to land registry url landing page
 # And I copy the address to the excel data sheet
 # And I copy the application reference to the excel data sheet
 # Then I click logout button
-   

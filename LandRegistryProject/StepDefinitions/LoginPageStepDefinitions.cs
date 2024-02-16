@@ -1,13 +1,9 @@
 using BoDi;
-using Gherkin.Ast;
 using LandRegistryProject.Drivers;
 using LandRegistryProject.PageObject;
 using LandRegistryProject.Support;
 using NUnit.Framework;
 using OpenQA.Selenium;
-using System;
-using System.Linq;
-using TechTalk.SpecFlow;
 
 namespace LandRegistryProject.StepDefinitions
 {
@@ -143,7 +139,6 @@ namespace LandRegistryProject.StepDefinitions
         {
             //readingFromExcelSheet.WriteDataToExcelSpreadSheet
             var address = loginPage.GetDisplayedAddressDetails();
-            
         }
 
         [When(@"I copy the application reference to the excel data sheet")]
@@ -160,18 +155,11 @@ namespace LandRegistryProject.StepDefinitions
             loginPage.ClickLogoutButton();
         }
 
-
         [Then(@"I perform the end to end application submission for all the data")]
         public void ThenIPerformTheEndToEndApplicationSubmissionForAllTheData()
         {
-
             // readingFromExcelSheet.navigateSheet();
             readingFromExcelSheet.ReadExcelData();
-            
         }
-
-        
-
-
     }
 }

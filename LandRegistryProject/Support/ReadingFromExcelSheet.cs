@@ -1,7 +1,6 @@
 ﻿using BoDi;
 using LandRegistryProject.Drivers;
 using LandRegistryProject.PageObject;
-using Microsoft.Office.Interop.Excel;
 using NUnit.Framework;
 using OfficeOpenXml;
 using OpenQA.Selenium;
@@ -11,14 +10,12 @@ namespace LandRegistryProject.Support
 {
     public class ReadingFromExcelSheet : DriverHelper
     {
-
         public ExcelWorksheet worksheet;
         public ExcelPackage pck;
         public ExcelWorksheet sheet;
         public LoginPage loginPage;
         public DirectoryInfo projDir = new DirectoryInfo(Environment.CurrentDirectory);
         public string excelFilePath;
-        
         
 
         public ReadingFromExcelSheet(IObjectContainer container)
@@ -44,7 +41,6 @@ namespace LandRegistryProject.Support
 
             for (int r = 3; r <= rows; r++)
             {
-
                 if (sheet.Cells[r, 13].Text.Equals(""))
                 {
                     string rg = "A" + r + ":M" + r;
@@ -55,8 +51,6 @@ namespace LandRegistryProject.Support
             }
         }
 
-
-
         public Dictionary<string, string> ReadRowData(int row)
         {
             Dictionary<string, string> RowData = new Dictionary<string, string>();
@@ -66,17 +60,14 @@ namespace LandRegistryProject.Support
 
             sheet = pck.Workbook.Worksheets[0];
 
-
             for (int i = 1; i <= 13; i++)
                 RowData.Add(sheet.Cells[3, i].Text.ToString(), sheet.Cells[row, i].Text.ToString());
         
             return RowData;
-            
         }
 
         public List<string> ReadRowData(string cellRange)
         {
-
             // String to access the worksheet
             List<string> cellValue = new List<string>();
             
@@ -115,7 +106,6 @@ namespace LandRegistryProject.Support
 
                 // Save the file
                 pck.SaveAs(new FileInfo(excelFilePath));
-
         }
 
 
@@ -176,8 +166,6 @@ namespace LandRegistryProject.Support
             }
             else
                 Console.WriteLine("\n\nRECORD SKIPPED for row: "+ row + "\nNo value in Field 'HMLR Title No' or 'Full Asset Address'.\n\n");
-
         }
     }
 }
-
