@@ -176,6 +176,7 @@ namespace LandRegistryProject.Support
             }
             else
                 Console.WriteLine("\n\nRECORD SKIPPED for row: "+ row + "\nNo value in Field 'HMLR Title No' or 'Full Asset Address'.\n\n");
+
         }
     }
 }
