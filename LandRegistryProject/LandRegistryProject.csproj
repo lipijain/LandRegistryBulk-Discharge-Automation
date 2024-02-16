@@ -7,11 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="TestDatas\TittleNumer_old.xlsx" />
+    <None Remove="TestDatas\TittleNumer.xlsx" />
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="TestDatas\TittleNumer_old.xlsx">
+    <EmbeddedResource Include="TestDatas\TittleNumer.xlsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
   </ItemGroup>
