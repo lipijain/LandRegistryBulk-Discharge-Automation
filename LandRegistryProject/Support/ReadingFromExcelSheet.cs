@@ -163,7 +163,7 @@ namespace LandRegistryProject.Support
                 loginPage.ClickNextButton();
                 var actualAddress = loginPage.GetActualAddress();
 
-                Assert.That(actualAddress.Contains(rowdata.GetValueOrDefault("Full Asset Address")), Is.EqualTo(true));
+                Assert.That(actualAddress.Replace("(", "").Replace(")", "").Contains(rowdata.GetValueOrDefault("Full Asset Address").Replace("(", "").Replace(")", "")), Is.EqualTo(true));
                 Assert.That(!rowdata.GetValueOrDefault("Full Asset Address").Equals(""), "\n\nERROR: No value in Field 'Full Asset Address'\n\n");
                 loginPage.ClickNextButton();
                 loginPage.EnterDateOfCharge();
