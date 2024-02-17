@@ -22,7 +22,6 @@ namespace LandRegistryProject.Support
         {
             driver = container.Resolve<IWebDriver>();
             loginPage = container.Resolve<LoginPage>();
-
         }
         public void ReadExcelData()
         {
@@ -80,8 +79,6 @@ namespace LandRegistryProject.Support
             return cellValue;
         }
 
-
-
         public int GetColumnByName(string colName)
         {
             int i = 1;
@@ -92,7 +89,6 @@ namespace LandRegistryProject.Support
             }
             return i;
         }
-
 
         public void WriteDataToExcelSpreadSheet(int row, int col, string value)
         {
@@ -107,7 +103,6 @@ namespace LandRegistryProject.Support
                 // Save the file
                 pck.SaveAs(new FileInfo(excelFilePath));
         }
-
 
         public string GetSubString(string value)
         {

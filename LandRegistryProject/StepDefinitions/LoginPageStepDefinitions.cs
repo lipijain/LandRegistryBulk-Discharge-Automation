@@ -19,32 +19,18 @@ namespace LandRegistryProject.StepDefinitions
             loginPage = container.Resolve<LoginPage>();
             readingFromExcelSheet = container.Resolve<ReadingFromExcelSheet>();
         }
-        //Stage1
 
         [Given(@"I am on land registry sign-in page")]
-        public void GivenIAmOnLandRegistrySign_InPage()
-        {
-            loginPage.GoToLandRegistryPage();
-        }
+        public void GivenIAmOnLandRegistrySign_InPage() => loginPage.GoToLandRegistryPage();
 
         [When(@"I enter Username in the user name field")]
-        public void WhenIEnterInTheUserNameField()
-        {
-            loginPage.EnterUsername();
-        }
+        public void WhenIEnterInTheUserNameField() => loginPage.EnterUsername();
 
         [When(@"I enter Password in the password field")]
-        public void WhenIEnterInThePasswordField()
-        {
-            loginPage.EnterPassword();
-        }
+        public void WhenIEnterInThePasswordField() => loginPage.EnterPassword();
 
         [Then(@"I click the login button")]
-        public void ThenIClickTheLoginButton()
-        {
-                loginPage.ClickLogin();
-        }
-
+        public void ThenIClickTheLoginButton() => loginPage.ClickLogin();
 
         [Then(@"data successfully sumitted")]
         public void ThenDataSuccessfullySumitted()
@@ -54,40 +40,23 @@ namespace LandRegistryProject.StepDefinitions
             loginPage.ClickCookiesButton();
         }
 
-
         [Then(@"I click request official copies go to service button")]
-        public void ThenIClickRequestOfficialCopiesGoToServiceButton()
-        {
-            loginPage.ClickRequestOfficialCop();
-        }
+        public void ThenIClickRequestOfficialCopiesGoToServiceButton() => loginPage.ClickRequestOfficialCop();
 
         [Then(@"I click lender services")]
-        public void ThenIClickLenderServices()
-        {
-            loginPage.ClickLenderServices();
-        }
-
-      // Stage2
+        public void ThenIClickLenderServices() => loginPage.ClickLenderServices();
 
         [Given(@"I am on e-DS(.*) discharge page")]
-        public void GivenIAmOnE_DSDischargePage(int p0)
-       
-        {
-            loginPage.ClickeDs1Discharge();
-        }
+        public void GivenIAmOnE_DSDischargePage(int p0) => loginPage.ClickeDs1Discharge();
 
         [When(@"I am on e-DS(.*) discharge page")]
-        public void WhenIAmOnE_DSDischargePage(int p0)
-        {
-            loginPage.ClickeDs1Discharge();
-        }
-
+        public void WhenIAmOnE_DSDischargePage(int p0) => loginPage.ClickeDs1Discharge();
 
         [When(@"I have identified address on excel datasheet and select the title number")]
         public void WhenIHaveIdentifiedExcelDataSheetAndEnterTheTitleNumber()
         {
-            var address = readingFromExcelSheet.ReadRowData("D1:D5"); //From excel
-            var titleNumber = readingFromExcelSheet.ReadRowData("I1:I5"); //From excel
+            var address = readingFromExcelSheet.ReadRowData("D1:D5"); 
+            var titleNumber = readingFromExcelSheet.ReadRowData("I1:I5");
 
             loginPage.EnterTittleNumberFromExcel(titleNumber[4]);
             loginPage.ClickNextButton();
@@ -96,22 +65,13 @@ namespace LandRegistryProject.StepDefinitions
         }
 
         [When(@"I click next button")]
-        public void WhenIClickNextButton()
-        {
-            loginPage.ClickNextButton();
-        }
+        public void WhenIClickNextButton() => loginPage.ClickNextButton();
 
         [When(@"I enter date of charge")]
-        public void WhenIEnterDateOfCharge()
-        {
-            loginPage.EnterDateOfCharge();
-        }
+        public void WhenIEnterDateOfCharge() => loginPage.EnterDateOfCharge();
 
         [When(@"I select yes for  borrowers redemption button")]
-        public void WhenISelectYesForBorrowersRedemptionButton()
-        {
-            loginPage.SelectYesRadioButton();
-        }
+        public void WhenISelectYesForBorrowersRedemptionButton() => loginPage.SelectYesRadioButton();
 
         [When(@"I select yes for messages option")]
         public void WhenISelectYesForMessagesOption()
@@ -121,44 +81,29 @@ namespace LandRegistryProject.StepDefinitions
         }
 
         [When(@"I enter customer reference")]
-        public void WhenIEnterCustomerReference()
-        {
-            loginPage.EnterCustomerReference();
-        }
+        public void WhenIEnterCustomerReference() => loginPage.EnterCustomerReference();
 
         [When(@"I click submit button")]
-        public void WhenIClickSubmitButton()
-        {
-            loginPage.ClickNextButton();
-        }
-
-        // Stage3
+        public void WhenIClickSubmitButton() => loginPage.ClickNextButton();
 
         [When(@"I copy the address to the excel data sheet")]
         public void WhenICopyTheAddressToTheExcelDataSheet()
         {
-            //readingFromExcelSheet.WriteDataToExcelSpreadSheet
             var address = loginPage.GetDisplayedAddressDetails();
         }
 
         [When(@"I copy the application reference to the excel data sheet")]
         public void WhenICopyTheApplicationReferenceToTheExcelDataSheet()
         {
-            // readingFromExcelSheet.WriteDataToExcelSpreadSheet
             var appRef = loginPage.GetDisplayedApplicationReference();
-          
         }
 
         [Then(@"I click logout button")]
-        public void ThenIClickLogoutButton()
-        {
-            loginPage.ClickLogoutButton();
-        }
+        public void ThenIClickLogoutButton() => loginPage.ClickLogoutButton();
 
         [Then(@"I perform the end to end application submission for all the data")]
         public void ThenIPerformTheEndToEndApplicationSubmissionForAllTheData()
         {
-            // readingFromExcelSheet.navigateSheet();
             readingFromExcelSheet.ReadExcelData();
         }
     }

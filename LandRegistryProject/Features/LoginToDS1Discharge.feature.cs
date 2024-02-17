@@ -120,13 +120,13 @@ this.FeatureBackground();
 #line 15
   testRunner.Then("I click lender services", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
-#line 18
+#line 17
   testRunner.When("I am on e-DS1 discharge page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
-#line 20
+#line 19
   testRunner.Then("I perform the end to end application submission for all the data", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
-#line 22
+#line 21
   testRunner.Then("I click logout button", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             }

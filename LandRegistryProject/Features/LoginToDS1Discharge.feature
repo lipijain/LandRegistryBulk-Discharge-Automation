@@ -13,7 +13,6 @@ Background: Navigate to land registry url landing page
   And data successfully sumitted
   And I click request official copies go to service button
   Then I click lender services
-
   #Discharge numeber e-DS1 page
   When I am on e-DS1 discharge page
   #I Read address on excel datasheet and select and enter the title number and enter Charge details 
