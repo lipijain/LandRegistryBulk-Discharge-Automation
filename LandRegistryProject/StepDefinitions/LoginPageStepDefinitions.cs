@@ -4,6 +4,7 @@ using LandRegistryProject.PageObject;
 using LandRegistryProject.Support;
 using NUnit.Framework;
 using OpenQA.Selenium;
+using TechTalk.SpecFlow;
 
 namespace LandRegistryProject.StepDefinitions
 {
