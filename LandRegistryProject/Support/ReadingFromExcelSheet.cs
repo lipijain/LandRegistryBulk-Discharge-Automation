@@ -2,7 +2,7 @@
 using BoDi;
 using LandRegistryProject.Drivers;
 using LandRegistryProject.PageObject;
-using Microsoft.SharePoint.Client;
+
 using NUnit.Framework;
 using OfficeOpenXml;
 using OfficeOpenXml.Style;
@@ -211,37 +211,5 @@ namespace LandRegistryProject.Support
 
         }
 
-        public void ConnectToSharePointOnline()
-        {
-            string targetSiteURL = @"https://homesandcommunities.sharepoint.com/sites/HelptoBuy_TM45/";
-
-            var login = @"amos.awaghade@homesengland.gov.uk";
-            var password = "";
-
-            var securePassword = new SecureString();
-
-            foreach (char c in password)
-            {
-                securePassword.AppendChar(c);
-            }
-
-            SharePointOnlineCredentials onlineCredentials = new SharePointOnlineCredentials(login, securePassword);
-
-            ClientContext ctx = new ClientContext(targetSiteURL);
-            ctx.Credentials = onlineCredentials;
-            var web = ctx.Web;
-            ctx.Load(web);
-            ctx.ExecuteQuery();
-
-            var filePath = web.ServerRelativeUrl; // + "HelptoBuy_TM45/_layouts/15/Doc.aspx/sourcedoc=%7B94A7CCD5-D9E3-421E-AC08-67D4DEBE4A93%7D&file=Borrow%20Box%20DS1%20Daily%20Tracker%20FEBRUARY%202024.xlsx&wdOrigin=TEAMS-MAGLEV.p2p_ns.rwc&action=default&mobileredirect=true";
-            FileInformation fileInformation = Microsoft.SharePoint.Client.File.OpenBinaryDirect(ctx, filePath);
-
-            using (StreamReader sr = new StreamReader(fileInformation.Stream))
-            {
-                String line = sr.ReadToEnd();
-                Console.WriteLine(line);
-            }
-            Console.ReadKey();
-        }
     }
 }
