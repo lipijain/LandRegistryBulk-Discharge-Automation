@@ -1,10 +1,14 @@
-﻿using BoDi;
+﻿
+using BoDi;
 using LandRegistryProject.Drivers;
 using LandRegistryProject.PageObject;
-using Microsoft.Office.Interop.Excel;
+using Microsoft.SharePoint.Client;
 using NUnit.Framework;
 using OfficeOpenXml;
+using OfficeOpenXml.Style;
 using OpenQA.Selenium;
+using System.Security;
+using System.Security.Policy;
 using System.Text;
 
 namespace LandRegistryProject.Support
@@ -17,7 +21,7 @@ namespace LandRegistryProject.Support
         public LoginPage loginPage;
         public DirectoryInfo projDir = new DirectoryInfo(Environment.CurrentDirectory);
         public string excelFilePath;
-        
+
 
         public ReadingFromExcelSheet(IObjectContainer container)
         {
@@ -27,9 +31,10 @@ namespace LandRegistryProject.Support
         public void ReadExcelData()
         {
             //File Path To BorrowBox_DS1File Path Location
+            //ConnectToSharePointOnline();
             excelFilePath = projDir.Parent.Parent.Parent.FullName + @"\TestDatas\TittleNumer.xlsx";
             //excelFilePath = (Config.BorrowBox_DS1File_Path_Location);
-            
+
             var newFile = new FileInfo(excelFilePath);
             pck = new OfficeOpenXml.ExcelPackage(newFile);
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
@@ -62,7 +67,7 @@ namespace LandRegistryProject.Support
 
             for (int i = 1; i <= 13; i++)
                 RowData.Add(sheet.Cells[3, i].Text.ToString(), sheet.Cells[row, i].Text.ToString());
-        
+
             return RowData;
         }
 
@@ -70,7 +75,7 @@ namespace LandRegistryProject.Support
         {
             // String to access the worksheet
             List<string> cellValue = new List<string>();
-            
+
             // Access the worksheet (Feb 2024 in this case)
             sheet = pck.Workbook.Worksheets[0];
 
@@ -97,12 +102,13 @@ namespace LandRegistryProject.Support
             excelFilePath = projDir.Parent.Parent.Parent.FullName + @"\TestDatas\TittleNumer.xlsx";
             //excelFilePath = (Config.BorrowBox_DS1File_Path_Location);
 
-               var ValueToUpdate = value.Length > 20 ? GetSubString(value) : value;
-                sheet = pck.Workbook.Worksheets[0];
-                sheet.Cells[row, col].Value = ValueToUpdate;
+            //var ValueToUpdate = value.Length > 20 ? GetSubString(value) : value;
+            var ValueToUpdate = value;
+            sheet = pck.Workbook.Worksheets[0];
+            sheet.Cells[row, col].Value = ValueToUpdate;
 
-                // Save the file
-                pck.SaveAs(new FileInfo(excelFilePath));
+            // Save the file
+            pck.SaveAs(new FileInfo(excelFilePath));
         }
 
         public string GetSubString(string value)
@@ -133,35 +139,109 @@ namespace LandRegistryProject.Support
 
         public void Othersteps(Dictionary<string, string> rowdata, int row)
         {
+            bool cond = true;
             if (!rowdata.GetValueOrDefault("HMLR Title No.").Equals("") && !rowdata.GetValueOrDefault("Full Asset Address").Equals(""))
             {
-                Assert.That(!rowdata.GetValueOrDefault("HMLR Title No.").Equals(""), "\n\nERROR: No value in Field 'HMLR Title No'\n\n");
-
                 loginPage.EnterTittleNumberFromExcel(rowdata.GetValueOrDefault("HMLR Title No."));
 
                 loginPage.ClickNextButton();
                 var actualAddress = loginPage.GetActualAddress();
+                string expectedAddress = rowdata.GetValueOrDefault("Full Asset Address");
+                //Assert.That(actualAddress.Replace("(", "").Replace(")", "").Contains(rowdata.GetValueOrDefault("Full Asset Address").Replace("(", "").Replace(")", "")), Is.EqualTo(true));
 
-                Assert.That(actualAddress.Replace("(", "").Replace(")", "").Contains(rowdata.GetValueOrDefault("Full Asset Address").Replace("(", "").Replace(")", "")), Is.EqualTo(true));
-                Assert.That(!rowdata.GetValueOrDefault("Full Asset Address").Equals(""), "\n\nERROR: No value in Field 'Full Asset Address'\n\n");
-                loginPage.ClickNextButton();
-                loginPage.EnterDateOfCharge();
-                loginPage.SelectYesRadioButton();
-                var YesMessagesOption = loginPage.IsYesMessagesOptionTicked();
-                Assert.That(YesMessagesOption, Is.EqualTo(YesMessagesOption));
-                loginPage.ClickNextButton();
-                loginPage.ClickNextButton();
-                loginPage.EnterCustomerReference();
-                loginPage.ClickNextButton();
-                var address = loginPage.GetDisplayedAddressDetails();
-                WriteDataToExcelSpreadSheet(row, GetColumnByName("HMLR Asset Address"), address);
-                var appRef = loginPage.GetDisplayedApplicationReference();
-                WriteDataToExcelSpreadSheet(row, GetColumnByName("Discharge Reference"), appRef);
-                WriteDataToExcelSpreadSheet(row, GetColumnByName("eDS1 Status"), "Submitted");
+                if (!compareAddress(actualAddress, expectedAddress))
+                {
+                    Assert.Warn("Address do not match");
+                    cond = false;
+                }
+                if (rowdata.GetValueOrDefault("Full Asset Address").Equals(""))
+                {
+                    Assert.Warn("\nERROR: No value in Field 'Full Asset Address'\n");
+                    cond = false;
+                }
+                if (cond)
+                {
+                    loginPage.ClickNextButton();
+                    loginPage.EnterDateOfCharge();
+                    loginPage.SelectYesRadioButton();
+                    var YesMessagesOption = loginPage.IsYesMessagesOptionTicked();
+                    //Assert.That(YesMessagesOption, Is.EqualTo(YesMessagesOption));
+                    loginPage.ClickNextButton();
+                    loginPage.ClickNextButton();
+                    loginPage.EnterCustomerReference();
+                    loginPage.ClickNextButton();
+                    var address = loginPage.GetDisplayedAddressDetails();
+                    WriteDataToExcelSpreadSheet(row, GetColumnByName("HMLR Asset Address"), address);
+                    var appRef = loginPage.GetDisplayedApplicationReference();
+                    WriteDataToExcelSpreadSheet(row, GetColumnByName("Discharge Reference"), appRef);
+                    WriteDataToExcelSpreadSheet(row, GetColumnByName("eDS1 Status"), "Submitted");
+
+                }
                 loginPage.ClickeDs1Discharge();
             }
             else
-                Console.WriteLine("\n\nRECORD SKIPPED for row: "+ row + "\nNo value in Field 'HMLR Title No' or 'Full Asset Address'.\n\n");
+            {
+                Console.WriteLine("\nRECORD SKIPPED for row: " + row + "\nNo value in Field 'HMLR Title No' or 'Full Asset Address'.\n");
+                WriteDataToExcelSpreadSheet(row, GetColumnByName("eDS1 Status"), "No value in Field 'HMLR Title No' or 'Full Asset Address'.");
+            }
+
+            if (!cond)
+            {
+                Console.WriteLine("\nAddress does not match: " + row + "\n");
+                WriteDataToExcelSpreadSheet(row, GetColumnByName("eDS1 Status"), "Address does not match:");
+            }
+        }
+
+        private bool compareAddress(string actualAddress, string? expectedAddress)
+        {
+            string housenumber = "";
+            string postcode = "";
+
+            int firstSpaceIndex = expectedAddress.IndexOf(" ");
+            int lastSpaceIndex = expectedAddress.LastIndexOf(" ");
+            int postcodeSpaceIndex = expectedAddress.LastIndexOf(" ", lastSpaceIndex - 1);
+
+            housenumber = expectedAddress.Substring(0, firstSpaceIndex).Trim();
+            postcode = expectedAddress.Substring(postcodeSpaceIndex, expectedAddress.Length - postcodeSpaceIndex).Replace("(", "").Replace(")", "").Trim();
+            //postcode = expectedAddress.Substring(40, 8).Trim();
+            if (actualAddress.Contains(housenumber) && actualAddress.Contains(postcode))
+                return true;
+            else
+                return false;
+
+        }
+
+        public void ConnectToSharePointOnline()
+        {
+            string targetSiteURL = @"https://homesandcommunities.sharepoint.com/sites/HelptoBuy_TM45/";
+
+            var login = @"amos.awaghade@homesengland.gov.uk";
+            var password = "";
+
+            var securePassword = new SecureString();
+
+            foreach (char c in password)
+            {
+                securePassword.AppendChar(c);
+            }
+
+            SharePointOnlineCredentials onlineCredentials = new SharePointOnlineCredentials(login, securePassword);
+
+            ClientContext ctx = new ClientContext(targetSiteURL);
+            ctx.Credentials = onlineCredentials;
+            var web = ctx.Web;
+            ctx.Load(web);
+            ctx.ExecuteQuery();
+
+            var filePath = web.ServerRelativeUrl; // + "HelptoBuy_TM45/_layouts/15/Doc.aspx/sourcedoc=%7B94A7CCD5-D9E3-421E-AC08-67D4DEBE4A93%7D&file=Borrow%20Box%20DS1%20Daily%20Tracker%20FEBRUARY%202024.xlsx&wdOrigin=TEAMS-MAGLEV.p2p_ns.rwc&action=default&mobileredirect=true";
+            FileInformation fileInformation = Microsoft.SharePoint.Client.File.OpenBinaryDirect(ctx, filePath);
+
+            using (StreamReader sr = new StreamReader(fileInformation.Stream))
+            {
+                String line = sr.ReadToEnd();
+                Console.WriteLine(line);
+            }
+            Console.ReadKey();
         }
     }
 }
