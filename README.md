@@ -13,7 +13,7 @@ Pre-Conditions (for data prep)
 
 6.	If any test run fail while discharging, then user should insert “Manual discharge required” into “eDS1 Status” hence user should perform test re-run.
 
-7.	If there is a space in between the house number address (Flat house), i.e. 3 16, the test run will fail. So, before the test run proceed, the “eDS1 Status” must be manually updated with Manual discharge required.
+7.	If there is a space or comma in between the house number address, i.e. (number space/comma number ex: 1 3 Street name or 1,3 Street name) the test run will fail. So, before the test run proceed, the “eDS1 Status” must be manually updated for such row with Manual discharge required.
 
 8.	Once we can connect to the live data directly, changing of data path inside automation framework “Config.resx” file required monthly.
 
