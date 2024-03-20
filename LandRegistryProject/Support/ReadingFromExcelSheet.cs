@@ -32,7 +32,7 @@ namespace LandRegistryProject.Support
         {
             //File Path To BorrowBox_DS1File Path Location
             //ConnectToSharePointOnline();
-            excelFilePath = projDir.Parent.Parent.Parent.FullName + @"\TestDatas\TittleNumer.xlsx";
+            excelFilePath = projDir.Parent.Parent.Parent.FullName + @"\TestDatas\TitleNumber.xlsx";
             //excelFilePath = (Config.BorrowBox_DS1File_Path_Location);
 
             var newFile = new FileInfo(excelFilePath);
@@ -99,7 +99,7 @@ namespace LandRegistryProject.Support
         public void WriteDataToExcelSpreadSheet(int row, int col, string value)
         {
             //File Path To BorrowBox_DS1File Path Location
-            excelFilePath = projDir.Parent.Parent.Parent.FullName + @"\TestDatas\TittleNumer.xlsx";
+            excelFilePath = projDir.Parent.Parent.Parent.FullName + @"\TestDatas\TitleNumber.xlsx";
             //excelFilePath = (Config.BorrowBox_DS1File_Path_Location);
 
             //var ValueToUpdate = value.Length > 20 ? GetSubString(value) : value;
@@ -182,7 +182,7 @@ namespace LandRegistryProject.Support
             else
             {
                 Console.WriteLine("\nRECORD SKIPPED for row: " + row + "\nNo value in Field 'HMLR Title No' or 'Full Asset Address'.\n");
-                WriteDataToExcelSpreadSheet(row, GetColumnByName("eDS1 Status"), "No value in Field 'HMLR Title No' or 'Full Asset Address'.");
+                WriteDataToExcelSpreadSheet(row, GetColumnByName("eDS1 Status"), "");
             }
 
             if (!cond)
