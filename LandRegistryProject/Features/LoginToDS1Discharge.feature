@@ -3,7 +3,6 @@ As a user I want to be able to navigate to land registry landing page and login
 
 Background: Navigate to land registry url landing page 
 	
-
  #Logon into e-DS1 page
  Scenario: E2E for application submission 
   Given I am on land registry sign-in page

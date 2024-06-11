@@ -86,7 +86,7 @@ namespace LandRegistryProject.Features
             string[] tagsOfScenario = ((string[])(null));
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("E2E for application submission", null, tagsOfScenario, argumentsOfScenario, featureTags);
-#line 8
+#line 7
  this.ScenarioInitialize(scenarioInfo);
 #line hidden
             if ((TagHelper.ContainsIgnoreTag(tagsOfScenario) || TagHelper.ContainsIgnoreTag(featureTags)))
@@ -99,34 +99,34 @@ namespace LandRegistryProject.Features
 #line 4
 this.FeatureBackground();
 #line hidden
-#line 9
+#line 8
   testRunner.Given("I am on land registry sign-in page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
-#line 10
+#line 9
   testRunner.When("I enter Username in the user name field", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
-#line 11
+#line 10
   testRunner.And("I enter Password in the password field", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
-#line 12
+#line 11
   testRunner.Then("I click the login button", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
-#line 13
+#line 12
   testRunner.And("data successfully sumitted", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
-#line 14
+#line 13
   testRunner.And("I click request official copies go to service button", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
-#line 15
+#line 14
   testRunner.Then("I click lender services", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
-#line 17
+#line 16
   testRunner.When("I am on e-DS1 discharge page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
-#line 19
+#line 18
   testRunner.Then("I perform the end to end application submission for all the data", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
-#line 21
+#line 20
   testRunner.Then("I click logout button", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             }
