@@ -139,28 +139,28 @@ namespace LandRegistryProject.Support
 
         public void Othersteps(Dictionary<string, string> rowdata, int row)
         {
-            bool cond = true;
-            if (!rowdata.GetValueOrDefault("HMLR Title No.").Equals("") && !rowdata.GetValueOrDefault("Full Asset Address").Equals(""))
+            try
             {
-                loginPage.EnterTittleNumberFromExcel(rowdata.GetValueOrDefault("HMLR Title No."));
-
-                loginPage.ClickNextButton();
-                var actualAddress = loginPage.GetActualAddress();
-                string expectedAddress = rowdata.GetValueOrDefault("Full Asset Address");
-                //Assert.That(actualAddress.Replace("(", "").Replace(")", "").Contains(rowdata.GetValueOrDefault("Full Asset Address").Replace("(", "").Replace(")", "")), Is.EqualTo(true));
-
-                if (!compareAddress(actualAddress, expectedAddress))
+                bool cond = true;
+                if (rowdata.GetValueOrDefault("HMLR Title No.").Equals("") && rowdata.GetValueOrDefault("Full Asset Address").Equals(""))
                 {
-                    Assert.Warn("Address do not match");
                     cond = false;
                 }
-                if (rowdata.GetValueOrDefault("Full Asset Address").Equals(""))
+                else
                 {
-                    Assert.Warn("\nERROR: No value in Field 'Full Asset Address'\n");
-                    cond = false;
+                    loginPage.EnterTittleNumberFromExcel(rowdata.GetValueOrDefault("HMLR Title No."));
+                    loginPage.ClickNextButton();
+                    var actualAddress = loginPage.GetActualAddress();
+                    string expectedAddress = rowdata.GetValueOrDefault("Full Asset Address");
+                    if (!compareAddress(actualAddress, expectedAddress))
+                    {
+                        cond = false;
+                    }
+
                 }
                 if (cond)
                 {
+
                     loginPage.ClickNextButton();
                     loginPage.EnterDateOfCharge();
                     loginPage.SelectYesRadioButton();
@@ -175,21 +175,20 @@ namespace LandRegistryProject.Support
                     var appRef = loginPage.GetDisplayedApplicationReference();
                     WriteDataToExcelSpreadSheet(row, GetColumnByName("Discharge Reference"), appRef);
                     WriteDataToExcelSpreadSheet(row, GetColumnByName("eDS1 Status"), "Submitted");
-
                 }
-                loginPage.ClickeDs1Discharge();
-            }
-            else
-            {
-                Console.WriteLine("\nRECORD SKIPPED for row: " + row + "\nNo value in Field 'HMLR Title No' or 'Full Asset Address'.\n");
-                WriteDataToExcelSpreadSheet(row, GetColumnByName("eDS1 Status"), "");
-            }
 
-            if (!cond)
-            {
-                Console.WriteLine("\nAddress does not match: " + row + "\n");
-                WriteDataToExcelSpreadSheet(row, GetColumnByName("eDS1 Status"), "Address does not match:");
+                else
+                {
+                    Console.WriteLine("\nManual Intervention required: " + row + "\n");
+                    WriteDataToExcelSpreadSheet(row, GetColumnByName("eDS1 Status"), "Manual Intervention required");
+                }
             }
+            catch (Exception ex)
+            {
+                Console.WriteLine("\nManual Intervention required: " + row + "\n");
+                WriteDataToExcelSpreadSheet(row, GetColumnByName("eDS1 Status"), "Manual Intervention required");
+            }
+            loginPage.ClickeDs1Discharge();
         }
 
         private bool compareAddress(string actualAddress, string? expectedAddress)
