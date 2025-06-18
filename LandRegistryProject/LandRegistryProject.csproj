@@ -11,14 +11,14 @@
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.10.0" />
     <PackageReference Include="Microsoft.Office.Interop.Excel" Version="15.0.4795.1001" />
     <PackageReference Include="Selenium.Support" Version="4.21.0" />
-    <PackageReference Include="Selenium.WebDriver" Version="4.21.0" />
-    <PackageReference Include="Selenium.WebDriver.ChromeDriver" Version="125.0.6422.14100" />
+    <PackageReference Include="Selenium.WebDriver" Version="4.32.0" />
+    <PackageReference Include="Selenium.WebDriver.ChromeDriver" Version="137.0.7151.11900" />
     <PackageReference Include="SpecFlow.Plus.LivingDocPlugin" Version="3.9.57" />
-    <PackageReference Include="SpecFlow.NUnit" Version="3.9.74" />
-    <PackageReference Include="nunit" Version="4.1.0" />
-    <PackageReference Include="NUnit3TestAdapter" Version="4.5.0" />
-    <PackageReference Include="FluentAssertions" Version="6.12.0" />
-    <PackageReference Include="WebDriverManager" Version="2.17.2" />
+    <PackageReference Include="SpecFlow.NUnit" Version="4.0.31-beta" />
+    <PackageReference Include="nunit" Version="4.3.2" />
+    <PackageReference Include="NUnit3TestAdapter" Version="5.0.0" />
+    <PackageReference Include="FluentAssertions" Version="8.3.0" />
+    <PackageReference Include="WebDriverManager" Version="2.17.5" />
   </ItemGroup>
   <ItemGroup>
     <Compile Update="Config.Designer.cs">
