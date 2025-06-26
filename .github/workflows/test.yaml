@@ -19,6 +19,9 @@ jobs:
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: '9'  # Update as needed
+        source-url: https://pkgs.dev.azure.com/homesengland/_packaging/homesengland/nuget/v3/index.json
+      env:
+          NUGET_AUTH_TOKEN: ${{ secrets.AZURE_DEVOPS_PAT }}  
 
     - name: Restore dependencies
       run: dotnet restore
