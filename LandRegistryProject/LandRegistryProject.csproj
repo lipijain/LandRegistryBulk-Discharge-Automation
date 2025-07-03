@@ -12,7 +12,7 @@
     <PackageReference Include="Microsoft.Office.Interop.Excel" Version="15.0.4795.1001" />
     <PackageReference Include="Selenium.Support" Version="4.21.0" />
     <PackageReference Include="Selenium.WebDriver" Version="4.32.0" />
-    <PackageReference Include="Selenium.WebDriver.ChromeDriver" Version="138.0.7204.4900" />
+    <PackageReference Include="Selenium.WebDriver.ChromeDriver" Version="137.0.7151.6800" />
     <PackageReference Include="SpecFlow.Plus.LivingDocPlugin" Version="3.9.57" />
     <PackageReference Include="SpecFlow.NUnit" Version="4.0.31-beta" />
     <PackageReference Include="nunit" Version="4.3.2" />
