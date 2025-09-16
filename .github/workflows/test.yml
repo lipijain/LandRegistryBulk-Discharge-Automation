@@ -32,3 +32,12 @@ jobs:
     - name: Run Tests
       run: dotnet test --no-build --verbosity normal
 
+ # 6. Upload screenshots and test results for debugging
+    - name: Upload Test Results
+      if: always()
+      uses: actions/upload-artifact@v3
+      with:
+        name: test-artifacts
+        path: |
+          **/*.png
+          **/test_results.trx
