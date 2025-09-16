@@ -22,6 +22,9 @@ jobs:
         source-url: https://pkgs.dev.azure.com/homesengland/_packaging/homesengland/nuget/v3/index.json
       env:
           NUGET_AUTH_TOKEN: ${{ secrets.AZURE_DEVOPS_PAT }}  
+          
+    - name: Check connectivity to Land Registry
+      run: curl -I https://eservices.landregistry.gov.uk/eservices/ECHOM_HomepageServices
 
     - name: Restore dependencies
       run: dotnet restore
